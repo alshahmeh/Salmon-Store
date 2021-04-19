@@ -1,23 +1,23 @@
 'use strict';
 
-// Sourced from MDN Web Docs - Math.random
+
 let hours = ['6AM', '7AM', '8AM', '9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM', '6PM', '7PM'];
 
 function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
 }
 
-function Cities(name, minCust, maxCust, averageCookieSale, openTime, closeTime) {
+function Cities(name, minCustomer, maxCustomer, averageCookieSale, openTime, closeTime) {
   this.name = name;
-  this.minCust = minCust;
-  this.maxCust = maxCust;
+  this.minCust = minCustomer;
+  this.maxCust = maxCustomer;
   this.averageCookieSale = averageCookieSale;
   this.openTime = openTime;
   this.closeTime = closeTime;
   this.hourlyTotal = [];
   this.dailyTotal = 0;
 }
-
+//the number 14 here is the number of work hours
 Cities.prototype.calcCookiesPerHour = function () {
   for (let i = 0; i < 14; i++) {
     this.hourlyTotal[i] = Math.ceil(getRandomIntInclusive(this.minCust, this.maxCust) * this.averageCookieSale);
@@ -28,23 +28,23 @@ Cities.prototype.calcCookiesPerHour = function () {
 
 Cities.prototype.render = function () {
   this.calcCookiesPerHour();
-  let tableEl = document.getElementById('dataTable');
+  const tableEl = document.getElementById('dataTable');
 
-  let trElement = document.createElement('tr');
+  const trElement = document.createElement('tr');
   tableEl.appendChild(trElement);
 
-  let thElement = document.createElement('th');
+  const thElement = document.createElement('th');
   thElement.textContent = this.name;
   trElement.appendChild(thElement);
 
   for (let j = 0; j < this.hourlyTotal.length; j++) {
-    let tdElement = document.createElement('td');
+    const tdElement = document.createElement('td');
     tdElement.textContent = this.hourlyTotal[j];
     trElement.appendChild(tdElement);
   }
-  let tdElement = document.createElement('td');
-  tdElement.textContent = this.dailyTotal;
-  trElement.appendChild(tdElement);
+  const tdElement1 = document.createElement('td');
+  tdElement1.textContent = this.dailyTotal;
+  trElement.appendChild(tdElement1);
   tableEl.appendChild(trElement);
 };
 
@@ -60,11 +60,11 @@ for (let k = 0; k < city.length; k++) {
   city[k].calcCookiesPerHour();
 }
 
-let tableBody = document.getElementById('dataTable1');
+const tableBody = document.getElementById('tableBody');
 
 function renderheader() {
-  let headerrow = document.createElement('tr');
-  let headerstore = document.createElement('th');
+  const headerrow = document.createElement('tr');
+  const headerstore = document.createElement('th');
   headerstore.textContent = 'Locations';
   headerrow.appendChild(headerstore);
   tableBody.appendChild(headerrow);
@@ -74,7 +74,7 @@ function renderheader() {
     headerstore.appendChild(headerhour);
     headerrow.appendChild(headerhour);
   }
-  let headertotal = document.createElement('th');
+  const headertotal = document.createElement('th');
   headertotal.textContent = 'Store Totals';
   headerrow.appendChild(headertotal);
 }
@@ -86,27 +86,27 @@ for (let i = 0; i < city.length; i++) {
 renderFooter();
 
 function renderFooter() {
-  let headerrow = document.createElement('tr');
-  tableBody.appendChild(headerrow);
-  let tdElement = document.createElement('td');
+  const headerrow1 = document.createElement('tr');
 
-  tdElement.textContent = 'Daily Total';
-  headerrow.appendChild(tdElement);
+  const tdElement2 = document.createElement('td');
 
+  tdElement2.textContent = 'Daily Total';
+  headerrow1.appendChild(tdElement2);
+  tableBody.appendChild(headerrow1);
   let runningTotal;
 
   for (let i = 0; i < hours.length; i++) {
-    let tdElement = document.createElement('td');
+    const tdElement3 = document.createElement('td');
     let total = 0;
-    for (let j = 1; j < city.length-1; j++) {
+    for (let j = 0; j < city.length ; j++) {
       total += city[i].custPerHourArray[j];
       runningTotal += city[i].custPerHourArray[j];
     }
-    tdElement.textContent = total;
-    headerrow.appendChild(tdElement);
+    tdElement3.textContent = total;
+    headerrow1.appendChild(tdElement3);
 
   }
-  let tdElement1 = document.createElement('td');
-  tdElement1.textContent = runningTotal;
-  headerrow.appendChild(tdElement);
+  const tdElement4 = document.createElement('td');
+  tdElement4.textContent = runningTotal;
+  headerrow1.appendChild(tdElement4);
 }
