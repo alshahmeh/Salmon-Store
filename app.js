@@ -1,112 +1,185 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-var */
+
 'use strict';
 
+//Global Variables
 
-let hours = ['6AM', '7AM', '8AM', '9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM', '6PM', '7PM'];
+//Global Variable - Store hours
+var hours = ['6:00 am', '7:00 am', '8:00 am', '9:00 am', '10:00 am', '11:00 am', '12:00 pm', '1:00 pm', '2:00 pm', '3:00 pm', '4:00 pm', '5:00 pm', '6:00 pm', '7:00 pm'];
+//Global Variable - Store Locations Array
+var storeLocations = [];
+//Get Sales Data Table from sales.html
+var salmonTable = document.getElementById('salmonTable');
+//Get
+var salesInput = document.getElementById('salesInput');
+// var clearTable = document.getElementById('submit');
 
-function getRandomIntInclusive(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
-}
-
-function Cities(name, minCustomer, maxCustomer, averageCookieSale, openTime, closeTime) {
+//Store constructor
+function Store(name, minCustomers, maxCustomers, avgCookies) {
+  //Properties
   this.name = name;
-  this.minCust = minCustomer;
-  this.maxCust = maxCustomer;
-  this.averageCookieSale = averageCookieSale;
-  this.openTime = openTime;
-  this.closeTime = closeTime;
-  this.hourlyTotal = [];
-  this.dailyTotal = 0;
+  this.minCustomers = minCustomers;
+  this.maxCustomers = maxCustomers;
+  this.avgCookies = avgCookies;
+  //Arrays
+  this.averageCustomersPerHour = [];
+  this.averageCookiesPerHour = [];
+  this.totalCookiesPerDay = 0;
+  //Methods
+  this.numOfCustomersPerHour();
+  this.cookiesPerCustomer();
+  //Push the created instance to the storeLocations array
+  storeLocations.push(this);
 }
-//the number 14 here is the number of work hours
-Cities.prototype.calcCookiesPerHour = function () {
-  for (let i = 0; i < 14; i++) {
-    this.hourlyTotal[i] = Math.ceil(getRandomIntInclusive(this.minCust, this.maxCust) * this.averageCookieSale);
-    this.dailyTotal += this.hourlyTotal[i];
-    console.log(this.hourlyTotal[i]);
+
+Store.prototype.render = function() {
+  let trRowName = document.createElement('tr');
+  let tdStore = document.createElement('td');
+  tdStore.textContent = this.name;
+  trRowName.appendChild(tdStore);
+  for (let i = 0; i < this.averageCookiesPerHour.length; i++) {
+    let tdCell = document.createElement('td');
+    tdCell.textContent = this.averageCookiesPerHour[i];
+    trRowName.appendChild(tdCell);
+  }
+  let tdTotal = document.createElement('td');
+  tdTotal.textContent = this.totalCookiesPerDay;
+  trRowName.appendChild(tdTotal);
+  salmonTable.appendChild(trRowName);
+};
+Store.prototype.numOfCustomersPerHour = function() {
+  for (let i = 0; i < hours.length; i++) {
+    let singleHourCustomers = Math.floor(Math.random() * (this.maxCustomers - this.minCustomers + 1)) + this.minCustomers;
+    this.averageCustomersPerHour.push(singleHourCustomers);
   }
 };
-
-Cities.prototype.render = function () {
-  this.calcCookiesPerHour();
-  const tableEl = document.getElementById('dataTable');
-
-  const trElement = document.createElement('tr');
-  tableEl.appendChild(trElement);
-
-  const thElement = document.createElement('th');
-  thElement.textContent = this.name;
-  trElement.appendChild(thElement);
-
-  for (let j = 0; j < this.hourlyTotal.length; j++) {
-    const tdElement = document.createElement('td');
-    tdElement.textContent = this.hourlyTotal[j];
-    trElement.appendChild(tdElement);
+Store.prototype.cookiesPerCustomer = function() {
+  for (let i = 0; i < hours.length; i++) {
+    let singleHourCookies = Math.ceil(this.averageCustomersPerHour[i] * this.avgCookies);
+    this.averageCookiesPerHour.push(singleHourCookies);
+    this.totalCookiesPerDay += singleHourCookies;
   }
-  const tdElement1 = document.createElement('td');
-  tdElement1.textContent = this.dailyTotal;
-  trElement.appendChild(tdElement1);
-  tableEl.appendChild(trElement);
 };
-
-let seattle = new Cities('Seattle', 23, 65, 6.3, 6, 20);
-let tokyo = new Cities('Tokyo', 3, 24, 1.2, 6, 20);
-let dubai = new Cities('Dubai', 11, 38, 3.7, 6, 20);
-let paris = new Cities('Paris', 20, 38, 2.3, 6, 20);
-let lima = new Cities('Lima', 2, 16, 4.6, 6, 20);
-
-let city = [seattle, tokyo, dubai, paris, lima];
-
-for (let k = 0; k < city.length; k++) {
-  city[k].calcCookiesPerHour();
-}
-
-const tableBody = document.getElementById('tableBody');
-
-function renderheader() {
-  const headerrow = document.createElement('tr');
-  const headerstore = document.createElement('th');
-  headerstore.textContent = 'Locations';
-  headerrow.appendChild(headerstore);
-  tableBody.appendChild(headerrow);
+//Table creation functions
+function makeHeaderRow() { //eslint-disable-line
+  let tableRow = document.createElement('tr');
+  let thElement = document.createElement('th');
+  thElement.textContent = null;
+  salmonTable.appendChild(tableRow);
+  tableRow.appendChild(thElement);
   for (let i = 0; i < hours.length; i++) {
-    let headerhour = document.createElement('th');
-    headerhour.textContent = hours[i];
-    headerstore.appendChild(headerhour);
-    headerrow.appendChild(headerhour);
+    thElement = document.createElement('th');
+    thElement.textContent = hours[i];
+    tableRow.appendChild(thElement);
+    // console.log(thElement);
   }
-  const headertotal = document.createElement('th');
-  headertotal.textContent = 'Store Totals';
-  headerrow.appendChild(headertotal);
+  thElement = document.createElement('th');
+  thElement.textContent = 'Location Total';
+  tableRow.appendChild(thElement);
+  console.log(salmonTable);
+  salmonTable.appendChild(tableRow);
 }
-
-renderheader();
-for (let i = 0; i < city.length; i++) {
-  city[i].render();
+function renderAllStores() {
+  for (let i = 0; i < storeLocations.length; i++) {
+    storeLocations[i].render();
+  }
 }
-renderFooter();
-
-function renderFooter() {
-  const headerrow1 = document.createElement('tr');
-
-  const tdElement2 = document.createElement('td');
-
-  tdElement2.textContent = 'Daily Total';
-  headerrow1.appendChild(tdElement2);
-  tableBody.appendChild(headerrow1);
-  let runningTotal;
-
+function makeFooterRow() { //eslint-disable-line
+  let tableRow = document.createElement('tr');
+  tableRow.textContent = 'Totals';
+  salmonTable.appendChild(tableRow);
+  let bigStupidTotal = 0;
   for (let i = 0; i < hours.length; i++) {
-    const tdElement3 = document.createElement('td');
-    let total = 0;
-    for (let j = 0; j < city.length ; j++) {
-      total += city[i].custPerHourArray[j];
-      runningTotal += city[i].custPerHourArray[j];
+    let hourlyTotal = 0;
+    for (let j = 0; j < storeLocations.length; j++) {
+      hourlyTotal = hourlyTotal + storeLocations[j].averageCookiesPerHour[i];
+      bigStupidTotal += storeLocations[j].averageCookiesPerHour[i];
     }
-    tdElement3.textContent = total;
-    headerrow1.appendChild(tdElement3);
-
+    var tdElement = document.createElement('td');
+    tdElement.textContent = hourlyTotal;
+    tableRow.appendChild(tdElement);
   }
-  const tdElement4 = document.createElement('td');
-  tdElement4.textContent = runningTotal;
-  headerrow1.appendChild(tdElement4);
+  tdElement = document.createElement('td');
+  tdElement.textContent = bigStupidTotal;
+  tableRow.appendChild(tdElement);
 }
+
+//Store Object Declarations
+new Store('seattel', 2, 16, 4.6); //eslint-disable-line
+new Store('dubai', 11, 38, 3.7); //eslint-disable-line
+new Store('tokyo', 3, 24, 1.2); //eslint-disable-line
+new Store('lima', 20, 38, 2.3); //eslint-disable-line
+new Store('paris', 23, 65, 6.3); //eslint-disable-line
+
+
+//Store method to calculate input for our arrays.
+
+
+
+//Event Handler function
+function dataInput(event) {
+  event.preventDefault();
+  console.log('Submit button was clicked');
+  //If statement to prevent empty text fields
+  if (!event.target.name.value || !event.target.minCustomers.value || !event.target.maxCustomers.value || !event.target.avgCookies.value) {
+    return alert('Fields cannot be empty!');
+  }
+
+  event.target.name = null;
+  event.target.minCustomers = null;
+  event.target.maxCustomers = null;
+  event.target.avgCookies = null;
+
+  let name = event.target.name.value;
+  let minCustomers = parseInt(event.target.minCustomers.value);
+  let maxCustomers = parseInt(event.target.maxCustomers.value);
+  let avgCookies = parseFloat(event.target.avgCookies.value);
+
+  salmonTable.textContent = null;
+  //Code to make the input fields blank after user submits
+
+  let storeExist = doesStoreExist(storeLocations, name);
+  let index;
+
+  function doesStoreExist(x,y) {
+    for (let i = 0; i < x.length; i++) {
+      if (x[i].name === y) {
+        index = i;
+        return true;
+      }
+    }
+    return false;
+  }
+
+  doesStoreExist(storeLocations, name);
+  console.log(doesStoreExist(storeLocations, name));
+
+  if (storeExist === true) {
+    console.log('did find name');
+    storeLocations[index].minCustomers = parseInt(minCustomers);
+    storeLocations[index].maxCustomers = parseInt(maxCustomers);
+    storeLocations[index].avgCookies = parseFloat(avgCookies);
+    storeLocations[index].averageCustomersPerHour = [];
+    storeLocations[index].averageCookiesPerHour = [];
+    storeLocations[index].totalCookiesPerDay = 0;
+    storeLocations[index].numOfCustomersPerHour();
+    storeLocations[index].cookiesPerCustomer();
+  }
+
+  if (storeExist === false) {
+    let newStore = new Store(name, minCustomers, maxCustomers, avgCookies);
+  }
+
+  //Re-creating our table with the new user inputs
+  makeHeaderRow();
+  renderAllStores();
+  makeFooterRow();
+}
+
+
+makeHeaderRow();
+renderAllStores();
+makeFooterRow();
+
+salesInput.addEventListener('submit', dataInput);

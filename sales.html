@@ -34,9 +34,25 @@
            
        </ul>
        <h style="font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">This some information about sales :</h>
-       <table style="width: 100%;border: 2px solid black;background-color: coral;" id="dataTable"></table>
-    
-       <table style="width: 100%; background-color: rgb(197, 189, 186);" id="tableBody"></table>
+       <form id="salesInput" >
+        <fieldset>
+          <legend>Store Sales Input</legend>
+          <label class="nameInput">Name:
+          <input type="text" name="name"></label></br></br>
+          <label>Min Customers:
+          <input type="text" name="minCustomers"></label><br><br>
+          <label>Max Customers:
+          <input type="text" name="maxCustomers"></label><br><br>
+          <label>Average Sale:
+          <input type="text" name="avgCookies"></label><br><br>
+          <button id="submit">Submit</button>
+        </fieldset> </br>
+  
+        <section class="mainData">
+          <table id="salmonTable">
+          </table>
+        </section>
+        </form>
 
     </main>
     <footer>
