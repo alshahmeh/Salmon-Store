@@ -1,3 +1,4 @@
-body{background-color: rgb(192, 122, 30);margin: auto;width: 1000px;}
+@import url('https://fonts.googleapis.com/css2?family=Zilla+Slab+Highlight:wght@700&display=swap');
+body{background-color: rgb(192, 122, 30);margin: auto;width: 1000px;font-family: 'Zilla Slab Highlight', cursive;color: rgb(204, 231, 243);}
 a{text-decoration: none;font-size: 50px;font-family:fantasy;padding: 6px;letter-spacing: 20px;}
 nav{position: relative;left: 250px;bottom: 70px;}
